@@ -1,0 +1,16 @@
+body {
+    background-image: url("https://visitoceanside.org/wp-content/uploads/2013/01/SDZOoSafariPark.jpg");
+    background-color: #cccccc;
+}
+
+h1 {
+    text-align: left;
+    color: #777;
+    margin-bottom: 25px;
+}
+
+#game-board {
+    background: #eee;
+    padding: 25px;
+    border-radius: 10px;
+}
