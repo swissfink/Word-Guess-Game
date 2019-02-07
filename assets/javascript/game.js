@@ -49,7 +49,7 @@ guessList.push(userGuess);
       var animalDash = " ";
 
       // Convert the letters in animal name guessed by the computer to dashes
-      for (i = 0; i <= wordLength; i++) {
+      for (var i = 0; i <= wordLength; i++) {
         animalDash += "<span id='dash-"+i+"'>-</span>";
       }
 
