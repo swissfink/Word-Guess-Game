@@ -1,16 +1,88 @@
 body {
-    background-image: url("https://visitoceanside.org/wp-content/uploads/2013/01/SDZOoSafariPark.jpg");
-    background-color: #cccccc;
+    background-color: #eee;
+    padding-top: 30px;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    letter-spacing: 1px;
+    color: white;
+    text-shadow: 0 0 2px black, -1px -1px 2px black, 1px 0 2px black, 1px 1px 2px black;
+    background: url("https://visitoceanside.org/wp-content/uploads/2013/01/SDZOoSafariPark.jpg") space;
+    background-size: cover;
+    
 }
 
-h1 {
-    text-align: left;
-    color: #777;
-    margin-bottom: 25px;
+
+.container { 
+    text-align: center;
+    
 }
 
-#game-board {
-    background: #eee;
-    padding: 25px;
+
+h1,h2,h3,h4,h5,h6 {
+    padding: 8px;
+}
+
+
+#currentWord {
+    letter-spacing: 10px;
+}
+
+
+#pressKeyToStart {
+    position: absolute;
+    left: 60px;
+    z-index: 2;
+    padding: 140px 30px 30px 30px;
+    color:#000;
+    background-color: white;
+    min-height: 325px;
+    width: 85%;
+    text-shadow: none;
+    font-weight: bold;
+    z-index: 2;
+}
+
+
+#youwinText,
+#youloseText {
+    position: absolute;
+    top: 100px;
+    left: 60px;
+    z-index: 2;
+    padding: 60px 30px 30px 30px;
+    color: #000;
+    background-color: white;
+    min-height: 180px;
+    width: 85%;
+    text-shadow: none;
+    font-weight: bold;
+    z-index: 0;
+}   
+
+
+#pressKeyPlayAgain {
+    position: absolute;
+    bottom: 70px;
+    left: 60px;
+    margin-top: 70px;
+    padding: 30px 30px 30px 30px;
+    color:#000;
+    background-color: white;
+    min-height: 180px;
+    width: 85%;
+    text-shadow: none;
+    font-weight: bold;
+    z-index: 1;
+}
+
+
+.gameplay-column {
+    padding-top: 30px;
+    padding-bottom: 30px;
+    border: 5px double #fff;
     border-radius: 10px;
+    text-align: center;
+    margin-top: 50px;
+    margin-bottom: 60px;
+    min-height: 450px;
+    background-color: rgba(88, 119, 77, .7);
 }

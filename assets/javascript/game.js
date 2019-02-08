@@ -1,104 +1,147 @@
-//Game Start
-var newGame = true;
+var randomAnimals =             // Animal Word list
+    [
+        "giraffe",
+        "lion",
+        "rhinoceros",
+        "tiger",
+        "monkey",
+        "penguin",
+        "antelope",
+        "elephant",
+        "bear",
+        "owl",
+        "otter",
+    ];
 
+var maxTries = 12;              // Maximum number of tries a player has
+var guessedLetters = [];        // Stores the letters the player guessed
+var animalChoice;               // Choice of animal from the array above
+var guessingWord = [];          // The word that will be built to match the current animal
+var remainingGuesses = 0;       // How many guesses a player has left
+var gameStarted = false;        // Flag to tell if the game has started
+var hasFinished = false;        // Flag for 'press any key to try again'     
+var wins = -1;                  // How many wins a player has
+var losses = -1;                // How many losses a player has
 
-// Creating variables to hold the number of wins, losses, and guesses left.
-var wins = 0;
-var losses = 0;
-var guessesLeft = 12;
+// Show start text. 
+document.getElementById("pressKeyToStart").style.cssText = "display: block";
 
-// Create variables that hold references to the places in the HTML where we want to display things.
-var directionsText = document.getElementById("directions-text");
-var computerGuessText = document.getElementById("computerguess-text");
-var userguessText = document.getElementById("userguess-text");
-var guessesLeftText = document.getElementById("guessesleft-text");
-var winsText = document.getElementById("wins-text");
-var lossesText = document.getElementById("losses-text");
+// Reset game variables
+function resetGame() {
+    remainingGuesses = maxTries;
+    gameStarted = false;
 
-//Array to capture user letter input
-var guessList = []; 
+    // Hide win / lose / play again / start text.
+    document.getElementById("pressKeyToStart").style.cssText = "display: none";
+    document.getElementById("pressKeyPlayAgain").style.cssText = "display: none";
+    document.getElementById("youwinText").style.cssText = "display: none";
+    document.getElementById("youloseText").style.cssText = "display: none";
+    
+    // Clear out arrays
+    guessedLetters = [];
+    guessingWord = [];
+    
+    // Choose an animal from the random animals array.
+    animalChoice = Math.floor(Math.random() * (randomAnimals.length));
 
-// This function is run whenever the user presses a key.
-document.onkeyup = function(event) {
-
-// Determines which key was pressed.
-var userGuess = event.key; 
-
-//This is to capture the letters entered by the user 
-guessList.push(userGuess);    
-
-
-//for a new game
-
-    if(newGame == true) {
-
-      // Creates an array that lists out all of the computer's options.
-      var computerChoices = ["giraffe", "elephant", "tiger", "rhinoceros", "lion", "penguin", "monkey", "walrus"];
-
-      // Randomly chooses a choice from the options array. This is the Computer's guess.
-      // var computerGuess = computerChoices[Math.floor(Math.random() * computerChoices.length)];
-
-      var computerGuess = "monkey";
-
-      // Count out how many letters are in the computer guess.
-      var wordArray = computerGuess.split('');
-      var wordLength = wordArray.length;
-      console.log(wordLength);
-
-      // Create variable to store dashes
-      var animalDash = " ";
-
-      // Convert the letters in animal name guessed by the computer to dashes
-      for (var i = 0; i <= wordLength; i++) {
-        animalDash += "<span id='dash-"+i+"'>-</span>";
-      }
-
-      // Hide the directions
-      directionsText.textContent = "";
-
-      // Show wins and losses
-      winsText.textContent = "Wins: " + wins;
-      lossesText.textContent = "Losses: " + losses;
-
-      // Display a new animal name to guess
-      computerGuessText.innerHTML = "Animal: " + animalDash;
+    // Break out the word into individual letters and replace the letters with dashes.
+    for (var i = 0; i < randomAnimals[animalChoice].length; i++) {
+        guessingWord.push("_");
     }
+    
+    // Show display
+    updateDisplay();
+};
 
-    newGame = false;
+//  Update the display on the HTML Page.
+function updateDisplay() {
+    
+    document.getElementById("totalWins").innerText = wins;
+    document.getElementById("totalLosses").innerText = losses;
+    document.getElementById("currentWord").innerText = "";
+    document.getElementById("remainingGuesses").innerText = remainingGuesses;
+    document.getElementById("guessedLetters").innerText = guessedLetters;
+    
+    // Update the progress of the player's guesses.
+    for (var i = 0; i < guessingWord.length; i++) {
+        document.getElementById("currentWord").innerText += guessingWord[i];
+    }
+};
 
-  // To reset game after there is a win or loss
-  function reset() {
-  (guessesLeft = 12);
-  (guessList = []);
-  }
+// Updates to the word based on the player's guesses.
+document.onkeyup = function(event) {
+    
+    // If player finishes a game, dump one keystroke and reset. (?)
+   if(hasFinished) {
+        resetGame();
+        hasFinished = false;
+        
+    } else {
+        // Check to make sure only a-z is pressed.
+        if(event.keyCode >= 65 && event.keyCode <= 90) {
+            makeGuess(event.key.toLowerCase());
+        }
+    }
+};
 
-  // This logic determines the outcome of the game (win/loss), and increments the appropriate number
-  
-  if (userGuess === "a" ||  "b" || "c" ||  "d" || "e" || "f" || "g" || "h" || "i" || "j" || "k" || "l" ||  "m" ||  "n" ||  "o" || "p" || "q" || "r" || "s" ||  "t" || "u" ||  "v" || "w" ||  "x" || "y" || "z") {
-
-      for(var n = 0; n < wordLength; n++) {
-        if (userGuess == wordArray[n]){
-          document.getElementById("dash-"+n).textContent=userGuess;
+// Once a player starts guessing letters
+function makeGuess(letter) {
+    if (remainingGuesses > 0) {
+        if (!gameStarted) {
+            gameStarted = true;
         }
 
-      }
+        // Check to make sure a player only uses available letters.
+        if (guessedLetters.indexOf(letter) === -1) {
+            guessedLetters.push(letter);
+            evaluateGuess(letter);
+        }
+    }
+    updateDisplay();
+    checkWin();
+};
 
+// Finds all instances of a letter in the random animal chosen and replaces them in the guess word.
+function evaluateGuess(letter) {
+    
+    // Array to store positions of letters in the string.
+    var positions = [];
 
+    // Loop through word and find all instances of guessed letter, 
+    // store the indicies in the "positions" array.
+    for (var i = 0; i < randomAnimals[animalChoice].length; i++) {
+        if(randomAnimals[animalChoice][i] === letter) {
+            positions.push(i);
+        }
+    }
 
+    // If there are no matches, remove a guess.
+    if (positions.length <= 0) {
+        remainingGuesses--;
 
-      if (userGuess === computerGuess) {
-          wins++;
-          reset ();
-      } else if (userGuess !== computerGuess) {
-          guessesLeft--;
-      }
-      if (guessesLeft === 0) {
-          losses++;
-          reset ();
-      }
-  }
+    } else {
+        // Loop through all the indicies and replace the '_' with a letter.
+        for(var i = 0; i < positions.length; i++) {
+            guessingWord[positions[i]] = letter;
+        } 
+    }
+};
 
-  // Display the user guesses, and wins / losses / guesses left / guesses so far.
-  userguessText.textContent = "Letters already guessed: " + guessList.join(", ");
-  guessesLeftText.textContent = "Guesses Left: " + guessesLeft;
+function checkWin() {
+
+    // If the player loses
+    if (remainingGuesses <= 0) {
+        losses++;
+        document.getElementById("youloseText").style.cssText = "display: block";
+        document.getElementById("pressKeyPlayAgain").style.cssText= "display: block";
+        hasFinished = true;
+    }
+    
+    // if the player wins
+    if (guessingWord.indexOf("_") === -1) {
+        wins++;
+        document.getElementById("youwinText").style.cssText = "display: block";
+        document.getElementById("pressKeyPlayAgain").style.cssText= "display: block";
+        hasFinished = true;
+    } 
 };
