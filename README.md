@@ -1,2 +1,2 @@
-# Psychic-Game
-Unit 3 Homework (easy)
+# Word-Guess-Game
+Unit 3 Homework (Recommended)
