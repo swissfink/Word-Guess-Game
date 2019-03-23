@@ -1,8 +1,8 @@
 # Word-Guess-Game
 
-##An app that runs in a browser, and features dynamically updated HTML and CSS powered by JavaScript.
+## An app that runs in a browser, and features dynamically updated HTML and CSS powered by JavaScript.
 
-####How to play:
+#### How to play:
 
 The game uses key events to listen for the letters that players type.
 
